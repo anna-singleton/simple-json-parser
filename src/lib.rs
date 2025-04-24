@@ -16,8 +16,8 @@ mod test {
 
     #[test]
     fn parse_simple_list() {
-        let input = r#"[true, false, null, "foobar", -10, ["no thanks"]]"#;
-        let expected = JItem::Array(vec![JItem::True, JItem::False, JItem::Null, JItem::String("foobar".to_string()), JItem::Number(-10), JItem::Array(vec![JItem::String("no thanks".to_string())])]);
+        let input = r#"[true, false, null, "foobar", -10.5, ["no thanks"]]"#;
+        let expected = JItem::Array(vec![JItem::True, JItem::False, JItem::Null, JItem::String("foobar".to_string()), JItem::Number(-10.5), JItem::Array(vec![JItem::String("no thanks".to_string())])]);
         let result = parse(input);
         let Ok(output) = result else {
             panic!("failure during parsing. failure: '{}'", result.unwrap_err());

@@ -127,16 +127,16 @@ mod test {
     #[test]
     fn parse_array_multi() {
         assert_successful_parse(
-            vec![Token::LSquareBracket, Token::True, Token::Comma, Token::Number(5), Token::Comma, Token::String("foo".to_string()), Token::RSquareBracket],
-            JItem::Array(vec![JItem::True, JItem::Number(5), JItem::String("foo".to_string())])
+            vec![Token::LSquareBracket, Token::True, Token::Comma, Token::Number(5.), Token::Comma, Token::String("foo".to_string()), Token::RSquareBracket],
+            JItem::Array(vec![JItem::True, JItem::Number(5.), JItem::String("foo".to_string())])
         );
     }
 
     #[test]
     fn parse_array_nested() {
         assert_successful_parse(
-            vec![Token::LSquareBracket, Token::True, Token::Comma, Token::LSquareBracket, Token::Number(5), Token::RSquareBracket, Token::RSquareBracket],
-            JItem::Array(vec![JItem::True, JItem::Array(vec![JItem::Number(5)])])
+            vec![Token::LSquareBracket, Token::True, Token::Comma, Token::LSquareBracket, Token::Number(5.), Token::RSquareBracket, Token::RSquareBracket],
+            JItem::Array(vec![JItem::True, JItem::Array(vec![JItem::Number(5.)])])
         );
     }
 
@@ -162,9 +162,9 @@ mod test {
     fn parse_object_multi() {
         let mut expected_hashmap = HashMap::new();
         expected_hashmap.insert("foo".to_string(), JItem::String("bar".to_string()));
-        expected_hashmap.insert("baz".to_string(), JItem::Number(10));
+        expected_hashmap.insert("baz".to_string(), JItem::Number(10.));
         assert_successful_parse(
-            vec![Token::LBrace, Token::String("foo".to_string()), Token::Colon, Token::String("bar".to_string()), Token::Comma, Token::String("baz".to_string()), Token::Colon, Token::Number(10), Token::RBrace],
+            vec![Token::LBrace, Token::String("foo".to_string()), Token::Colon, Token::String("bar".to_string()), Token::Comma, Token::String("baz".to_string()), Token::Colon, Token::Number(10.), Token::RBrace],
             JItem::Object(expected_hashmap)
         );
     }

@@ -1,6 +1,6 @@
 use std::{iter::Peekable, str::Chars};
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq)]
 pub enum Token {
     LBrace,
     RBrace,
@@ -11,7 +11,7 @@ pub enum Token {
     Colon,
     Comma,
 
-    Number(i64),
+    Number(f64),
     String(String),
 
     True,
@@ -83,9 +83,19 @@ fn lex_ident(i: &mut Peekable<Chars>, c: char) -> Result<Token, String> {
 fn lex_number(i: &mut Peekable<Chars>, c: char) -> Result<Token, String> {
     let mut built_string = String::new();
     built_string.push(c);
+    let mut has_decimal = false;
     while let Some(c) = i.peek() {
         if c.is_digit(10) {
             built_string.push(*c);
+        }
+        else if *c == '.' {
+            if has_decimal {
+                return Err("multiple '.' found in number literal.".to_string());
+            }
+            else {
+                built_string.push(*c);
+                has_decimal = true;
+            }
         }
         else {
             break;
@@ -107,7 +117,7 @@ mod test {
             Token::LBrace,
             Token::String("foo".to_string()),
             Token::Colon,
-            Token::Number(123),
+            Token::Number(123.0),
             Token::RBrace,
         ];
         assert!(tokens.is_ok(), "encountered error: {}", tokens.unwrap_err());
@@ -120,7 +130,7 @@ mod test {
         let tokens = lex(input);
         let expected_tokens = vec![
             Token::LSquareBracket,
-            Token::Number(123),
+            Token::Number(123.0),
             Token::Comma,
             Token::String("foobar".to_string()),
             Token::Comma,
@@ -129,6 +139,19 @@ mod test {
             Token::Null,
             Token::Comma,
             Token::False,
+            Token::RSquareBracket,
+        ];
+        assert!(tokens.is_ok(), "encountered error: {}", tokens.unwrap_err());
+        assert_eq!(tokens.unwrap(), expected_tokens);
+    }
+
+    #[test]
+    fn decimal() {
+        let input = r#"[123.45]"#;
+        let tokens = lex(input);
+        let expected_tokens = vec![
+            Token::LSquareBracket,
+            Token::Number(123.45),
             Token::RSquareBracket,
         ];
         assert!(tokens.is_ok(), "encountered error: {}", tokens.unwrap_err());

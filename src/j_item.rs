@@ -1,11 +1,11 @@
 use std::{collections::HashMap, fmt::Display};
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq)]
 pub enum JItem {
     Object(HashMap<String, JItem>),
     String(String),
     Array(Vec<JItem>),
-    Number(i64),
+    Number(f64),
     True,
     False,
     Null,
@@ -67,14 +67,26 @@ mod test {
 
     #[test]
     fn jitem_fmt_number() {
-        let formatted = format!("{}", JItem::Number(10));
+        let formatted = format!("{}", JItem::Number(10.));
         assert_eq!(formatted, "10");
     }
 
     #[test]
     fn jitem_fmt_number_negative() {
-        let formatted = format!("{}", JItem::Number(-10));
+        let formatted = format!("{}", JItem::Number(-10.));
         assert_eq!(formatted, "-10");
+    }
+
+    #[test]
+    fn jitem_fmt_number_float() {
+        let formatted = format!("{}", JItem::Number(10.5));
+        assert_eq!(formatted, "10.5");
+    }
+
+    #[test]
+    fn jitem_fmt_number_float_negative() {
+        let formatted = format!("{}", JItem::Number(-10.5));
+        assert_eq!(formatted, "-10.5");
     }
 
     #[test]
@@ -97,13 +109,13 @@ mod test {
 
     #[test]
     fn jitem_fmt_homogenous_list() {
-        let formatted = format!("{}", JItem::Array(vec![JItem::Number(10), JItem::Number(5), JItem::Number(-100)]));
+        let formatted = format!("{}", JItem::Array(vec![JItem::Number(10.), JItem::Number(5.), JItem::Number(-100.)]));
         assert_eq!(formatted, "[10,5,-100]");
     }
 
     #[test]
     fn jitem_fmt_non_homogenous_list() {
-        let formatted = format!("{}", JItem::Array(vec![JItem::Number(10), JItem::String("foobar".to_string()), JItem::True, JItem::False, JItem::Null]));
+        let formatted = format!("{}", JItem::Array(vec![JItem::Number(10.), JItem::String("foobar".to_string()), JItem::True, JItem::False, JItem::Null]));
         assert_eq!(formatted, "[10,\"foobar\",true,false,null]");
     }
 
